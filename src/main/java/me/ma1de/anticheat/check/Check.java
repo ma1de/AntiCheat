@@ -5,6 +5,7 @@ import me.ma1de.anticheat.AntiCheat;
 import me.ma1de.anticheat.packet.Packet;
 import me.ma1de.anticheat.user.User;
 import me.ma1de.anticheat.user.UserViolation;
+import me.ma1de.anticheat.util.PlayerUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -39,6 +40,7 @@ public abstract class Check {
                 new TextComponent(ChatColor.YELLOW + getDescription() + "\n\n"),
                 new TextComponent(ChatColor.YELLOW + "Player: " + ChatColor.WHITE + Bukkit.getPlayer(user.getUuid()).getName() + "\n"),
                 new TextComponent(ChatColor.YELLOW + "Info: " + ChatColor.WHITE + info + "\n"),
+                new TextComponent(ChatColor.YELLOW + "Ping: " + ChatColor.WHITE + PlayerUtil.getPing(Bukkit.getPlayer(user.getUuid())) + "ms\n"),
                 new TextComponent(ChatColor.YELLOW + "TPS: " + ChatColor.WHITE + MinecraftServer.getServer().recentTps[0] + "\n"),
                 new TextComponent(ChatColor.YELLOW + "Timestamp: " + ChatColor.WHITE + new SimpleDateFormat("MM/dd/yyy hh:mm:ss:S z").format(new Date(System.currentTimeMillis())) + "\n\n"),
                 new TextComponent(ChatColor.YELLOW + "Click here to teleport to the player")

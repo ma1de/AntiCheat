@@ -5,6 +5,7 @@ import me.ma1de.anticheat.check.CheckData;
 import me.ma1de.anticheat.check.CheckType;
 import me.ma1de.anticheat.packet.Packet;
 import me.ma1de.anticheat.user.User;
+import me.ma1de.anticheat.util.PlayerUtil;
 
 /**
  * Auto Clicker check itself
@@ -18,12 +19,12 @@ public class ClickerA extends Check {
     @Override
     public void handle(Packet packet) {
         if (packet.isFromClient() && packet.isArmAnimation()) {
-            if (user.getCombatProcessor().getCps() > 15) {
-                if (increaseThresholdBy(0.5) >= 1.5) {
+            if (user.getCombatProcessor().getCps() > 15 && PlayerUtil.getPing(packet.getPlayer()) < 500) {
+                if (increaseThresholdBy(0.5) >= 20) {
                     flag("cps=" + user.getCombatProcessor().getCps());
                 }
             } else {
-                decreaseThresholdBy(.25);
+                decreaseThresholdBy(0.25);
             }
 
             debug("cps=" + user.getCombatProcessor().getCps()
