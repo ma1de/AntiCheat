@@ -1,5 +1,6 @@
 # AntiCheat (CPS Detector)
 This is an anticheat which can detect if your player is using an autoclicker with high CPS (In range of [16-Infinity]).
+Download Link: https://www.spigotmc.org/resources/anticheat-cps-detector.109584/
 
 Features to add:
 - /alerts and /debug command
