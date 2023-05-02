@@ -7,6 +7,10 @@
     <groupId>me.ma1de.anticheat</groupId>
     <artifactId>AntiCheat</artifactId>
     <version>1.0</version>
+    <modules>
+        <module>Bukkit</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
