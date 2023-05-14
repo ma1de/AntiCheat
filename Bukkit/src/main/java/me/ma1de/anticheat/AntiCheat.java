@@ -43,6 +43,8 @@ public class AntiCheat extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        saveDefaultConfig();
+
         this.userHandler = new UserHandler();
         this.recorderHandler = new CPSRecorderHandler();
 
