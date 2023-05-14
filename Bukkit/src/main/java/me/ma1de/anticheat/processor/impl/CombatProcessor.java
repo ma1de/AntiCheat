@@ -23,7 +23,8 @@ public class CombatProcessor implements Processor {
     private int cps = 0;
     private double highestCps, averageCps, lowestCps = 0.0;
 
-    private long lastAttack;
+    private long lastSwing, lastLastSwing,  deltaLastLastSwing; // i hate myself for naming it that way
+    private long zeroSwingTicks;
 
     public CombatProcessor(User user) {
         this.user = user;
@@ -35,7 +36,11 @@ public class CombatProcessor implements Processor {
             return;
         }
 
-        if (packet.isFromClient() && packet.isArmAnimation()) {
+        if (packet.isFromClient() && packet.is(PacketType.Play.Client.USE_ENTITY)) {
+            if (new WrappedPacketInUseEntity(packet.getPacket()).getAction() != WrappedPacketInUseEntity.EntityUseAction.ATTACK) {
+                return;
+            }
+
             if (AntiCheat.getInstance().getRecorderHandler().getRecorder(user, this) == null) {
                 AntiCheat.getInstance().getRecorderHandler().addRecorder(user, this);
                 return;
@@ -67,6 +72,17 @@ public class CombatProcessor implements Processor {
             }
 
             this.cps = recorder.getSwings();
+
+            this.lastLastSwing = this.lastSwing;
+            this.lastSwing = System.currentTimeMillis();
+
+            this.deltaLastLastSwing = System.currentTimeMillis() - lastLastSwing;
+
+            if (this.deltaLastLastSwing < 15) {
+                zeroSwingTicks++;
+            } else {
+                zeroSwingTicks = 0;
+            }
         }
     }
 }

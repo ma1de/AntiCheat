@@ -1,0 +1,5 @@
+max-click-speed: 15
+ping-value-to-compensate: 300
+threshold-max: 1.5
+threshold-decay: 0.25
+threshold-increase: 0.5

@@ -1,5 +1,6 @@
 package me.ma1de.anticheat.check;
 
+import io.github.retrooper.packetevents.PacketEvents;
 import lombok.Getter;
 import me.ma1de.anticheat.AntiCheat;
 import me.ma1de.anticheat.packet.Packet;
@@ -32,6 +33,8 @@ public abstract class Check {
     public abstract void handle(final Packet packet);
 
     public void flag(final String info) {
+        user.addVl(new UserViolation(user, this, info, System.currentTimeMillis()));
+
         final TextComponent component = new TextComponent(
                 ("&7[&eAC&7] &e" + Bukkit.getPlayer(user.getUuid()).getName() + " &7has failed &e" + getName() + " &7[" + user.getVl(this) + "/" + getMaxVl() + "]")
                             .replace('&', ChatColor.COLOR_CHAR));
@@ -42,7 +45,7 @@ public abstract class Check {
                 new TextComponent(ChatColor.YELLOW + "Info: " + ChatColor.WHITE + info + "\n"),
                 new TextComponent(ChatColor.YELLOW + "Ping: " + ChatColor.WHITE + PlayerUtil.getPing(Bukkit.getPlayer(user.getUuid())) + "ms\n"),
                 new TextComponent(ChatColor.YELLOW + "False Flag: " + ChatColor.WHITE + (PlayerUtil.getPing(Bukkit.getPlayer(user.getUuid())) >= 225 ? "Likely" : "Unlikely") + "\n"),
-                new TextComponent(ChatColor.YELLOW + "TPS: " + ChatColor.WHITE + MinecraftServer.getServer().recentTps[0] + "\n"),
+                new TextComponent(ChatColor.YELLOW + "TPS: " + ChatColor.WHITE + PacketEvents.get().getServerUtils().getTPS() + "\n"),
                 new TextComponent(ChatColor.YELLOW + "Timestamp: " + ChatColor.WHITE + new SimpleDateFormat("MM/dd/yyy hh:mm:ss:S z").format(new Date(System.currentTimeMillis())) + "\n\n"),
                 new TextComponent(ChatColor.YELLOW + "Click here to teleport to the player")
         }));
@@ -56,8 +59,6 @@ public abstract class Check {
             player.spigot().sendMessage(component);
         }
 
-        user.addVl(new UserViolation(user, this, info, System.currentTimeMillis()));
-
         if (user.getVl(this) >= getMaxVl()) {
             for (final Player player : Bukkit.getOnlinePlayers()) {
                 player.sendMessage(ChatColor.YELLOW + "AntiCheat" + ChatColor.WHITE + " has caught " + ChatColor.YELLOW + Bukkit.getPlayer(user.getUuid()).getName());
@@ -67,7 +68,9 @@ public abstract class Check {
                 /*
                   Don't remove this, because if the anticheat will ban the player too quick, this will
                   set off a NullPointerException.
+                  Sometimes it flags the player multiple times when player's VL has already reached the maximum.
                  */
+
                 if (user == null || Bukkit.getPlayer(user.getUuid()) == null) {
                     return;
                 }

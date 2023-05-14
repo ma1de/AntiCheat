@@ -29,7 +29,7 @@ public class CommandHandler implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (Arrays.asList(strings).isEmpty()) {
-            commandSender.sendMessage(ChatColor.RED + "Available sub-commands: alerts, debug");
+            commandSender.sendMessage(ChatColor.RED + "Available sub-commands: alerts, debug, exempt, summary");
             return true;
         }
 

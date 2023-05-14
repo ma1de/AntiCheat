@@ -27,6 +27,8 @@ public class User {
 
     @Setter private int lagCompensation = 0;
 
+    @Setter private boolean exempt;
+
     public User(final UUID uuid) {
         if (Bukkit.getPlayer(uuid) == null) {
             throw new IllegalArgumentException("player cannot be null");
@@ -39,6 +41,8 @@ public class User {
 
         this.combatProcessor = new CombatProcessor(this);
         this.pingProcessor = new PingProcessor(this);
+
+        this.exempt = Bukkit.getPlayer(uuid).hasPermission("cpsdetector.exempt");
     }
 
     public int getVl(final Check check) {
@@ -69,7 +73,7 @@ public class User {
     }
 
     public void compensateLag() {
-        this.lagCompensation++;
+        this.lagCompensation = Math.min(this.lagCompensation + 1, 15);
     }
 
     public void reduceCompensations() {

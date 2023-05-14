@@ -4,6 +4,7 @@ import io.github.retrooper.packetevents.event.PacketListenerAbstract;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
+import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
 import me.ma1de.anticheat.AntiCheat;
 import me.ma1de.anticheat.check.Check;
 import me.ma1de.anticheat.packet.Packet;
@@ -15,7 +16,11 @@ public class CheckListener extends PacketListenerAbstract {
     public void onPacketPlayReceive(PacketPlayReceiveEvent event) {
         this.handle(new Packet(event));
 
-        if (event.getPacketId() == PacketType.Play.Client.ARM_ANIMATION) {
+        if (event.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
+            if (new WrappedPacketInUseEntity(event.getNMSPacket()).getAction() != WrappedPacketInUseEntity.EntityUseAction.ATTACK) {
+                return;
+            }
+
             for (final CPSRecorder recorder : AntiCheat.getInstance().getRecorderHandler().getRecorders()) {
                 recorder.record(1);
             }
